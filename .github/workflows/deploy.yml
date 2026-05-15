@@ -2,7 +2,9 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [claude/build-learning-pwa-otDph]
+    branches:
+      - claude/build-learning-pwa-otDph
+      - claude/fix-missing-live-page-5Rqd8
   workflow_dispatch:
 
 permissions:
