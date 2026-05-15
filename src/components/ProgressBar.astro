@@ -1,0 +1,55 @@
+---
+interface Props {
+  // Comma-separated lesson IDs that count toward the bar.
+  lessonIds: string[];
+  // Label shown to the right (optional).
+  label?: string;
+}
+const { lessonIds, label } = Astro.props;
+const ids = lessonIds.join(',');
+const total = lessonIds.length;
+---
+
+<div
+  class="progress-bar flex items-center gap-3 text-xs"
+  style="color: var(--color-ink-muted);"
+  data-lesson-ids={ids}
+  data-total={total}
+>
+  <div
+    class="relative h-1 flex-1 rounded-full overflow-hidden"
+    style="background: var(--color-rule);"
+  >
+    <div
+      class="absolute inset-y-0 left-0 rounded-full"
+      style="background: var(--color-accent); width: 0%"
+      data-progress-fill
+    >
+    </div>
+  </div>
+  <span data-progress-text>0 / {total}{label ? ` ${label}` : ''}</span>
+</div>
+
+<script>
+  import { getCompleted, onChange } from '~/lib/progress';
+
+  function render(el: HTMLElement) {
+    const idsAttr = el.dataset.lessonIds ?? '';
+    const ids = idsAttr ? idsAttr.split(',') : [];
+    const total = Number(el.dataset.total ?? 0);
+    const completed = getCompleted();
+    const done = ids.filter((id) => completed.has(id)).length;
+    const pct = total === 0 ? 0 : Math.round((done / total) * 100);
+    const fill = el.querySelector<HTMLElement>('[data-progress-fill]');
+    const text = el.querySelector<HTMLElement>('[data-progress-text]');
+    if (fill) fill.style.width = `${pct}%`;
+    if (text) text.textContent = `${done} / ${total}`;
+  }
+
+  function renderAll() {
+    document.querySelectorAll<HTMLElement>('.progress-bar').forEach(render);
+  }
+
+  renderAll();
+  onChange(renderAll);
+</script>

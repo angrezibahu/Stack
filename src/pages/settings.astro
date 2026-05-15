@@ -1,0 +1,49 @@
+---
+import Base from '~/layouts/Base.astro';
+---
+
+<Base title="Settings">
+  <h1 class="text-2xl font-semibold tracking-tight mb-3">Settings</h1>
+  <p class="max-w-[55ch] text-[15px] leading-relaxed mb-8" style="color: var(--color-ink-muted);">
+    Everything is stored locally on this device. Nothing is sent anywhere.
+  </p>
+
+  <section class="border-t rule pt-6">
+    <h2 class="text-base font-semibold mb-1">Reading progress</h2>
+    <p class="text-sm mb-3" style="color: var(--color-ink-muted);">
+      <span data-progress-count>0</span> lessons marked complete on this device.
+    </p>
+    <button
+      id="reset-progress"
+      type="button"
+      class="rounded-md border rule px-3 py-1.5 text-sm hover:[background:var(--color-paper-raised)]"
+    >
+      Reset progress
+    </button>
+    <p class="text-xs mt-2" style="color: var(--color-ink-faint);" data-reset-confirm hidden>
+      Cleared.
+    </p>
+  </section>
+</Base>
+
+<script>
+  import { getCompleted, resetProgress, onChange } from '~/lib/progress';
+
+  function refresh() {
+    const el = document.querySelector<HTMLElement>('[data-progress-count]');
+    if (el) el.textContent = String(getCompleted().size);
+  }
+  refresh();
+  onChange(refresh);
+
+  document.getElementById('reset-progress')?.addEventListener('click', () => {
+    if (confirm('Reset all reading progress on this device?')) {
+      resetProgress();
+      const c = document.querySelector<HTMLElement>('[data-reset-confirm]');
+      if (c) {
+        c.hidden = false;
+        setTimeout(() => (c.hidden = true), 2000);
+      }
+    }
+  });
+</script>

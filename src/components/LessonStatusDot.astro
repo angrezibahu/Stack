@@ -1,0 +1,30 @@
+---
+interface Props {
+  lessonId: string;
+}
+const { lessonId } = Astro.props;
+---
+
+<span
+  class="lesson-status inline-block w-2 h-2 rounded-full"
+  style="background: var(--color-rule);"
+  data-lesson-id={lessonId}
+  aria-hidden="true"
+></span>
+
+<script>
+  import { getCompleted, onChange } from '~/lib/progress';
+
+  function render() {
+    const completed = getCompleted();
+    document.querySelectorAll<HTMLElement>('.lesson-status').forEach((el) => {
+      const id = el.dataset.lessonId!;
+      el.style.background = completed.has(id)
+        ? 'var(--color-accent)'
+        : 'var(--color-rule)';
+    });
+  }
+
+  render();
+  onChange(render);
+</script>

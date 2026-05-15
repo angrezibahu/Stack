@@ -1,0 +1,14 @@
+---
+// Inline blocking script to set theme before paint. Avoids flash.
+---
+<script is:inline>
+  (function () {
+    try {
+      var stored = localStorage.getItem('stack:theme');
+      var theme = stored === 'light' || stored === 'dark' ? stored : 'dark';
+      document.documentElement.dataset.theme = theme;
+    } catch (_) {
+      document.documentElement.dataset.theme = 'dark';
+    }
+  })();
+</script>

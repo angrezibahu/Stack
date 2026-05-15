@@ -1,0 +1,26 @@
+---
+title: 'The shape of the thing'
+order: 1
+estimated_minutes: 6
+threads: ['abstraction', 'encoding']
+---
+
+A large language model, viewed from the outside, is a function. You hand it
+some text. It hands you back more text. Everything else — the chat UI, the
+"thinking", the tools, the personality — is scaffolding around that one
+operation.
+
+What makes it interesting is not the function itself but what's inside. A
+few hundred billion numbers, arranged in a particular shape, multiplied
+together in a particular order. None of those numbers know they're
+representing language. The model doesn't know it's a model. The fact that
+useful text comes out the other end is, depending on your mood, either a
+deep statement about the structure of language or an enormous coincidence
+that we have learned how to engineer reliably.
+
+This module is the top of the stack. Over the next eleven we'll work
+downward — from this opaque pile of weights, through transformers and GPUs
+and instruction sets and logic gates, all the way to the electrons doing
+the actual work. By the bottom you should be able to look back up at this
+lesson and see, with no magic remaining, why a pattern of charges in
+silicon can talk back.
