@@ -1,0 +1,34 @@
+---
+title: "The vocabulary: AI vs ML vs LLM vs generative AI"
+order: 7
+estimated_minutes: 7
+threads: []
+---
+
+The terms get muddled constantly. Here they are, sorted out.
+
+**Artificial Intelligence (AI).** The broadest term. The aspiration of building machines that do things requiring intelligence — language, perception, reasoning, planning, action. Coined in 1956. Has gone through multiple "AI winters" — periods of disillusionment after over-hyped advances. Today, "AI" usually means the current generation of statistical methods, but historically it has included rule-based systems, search algorithms, expert systems, and lots more. When a journalist says "AI," they almost always mean the LLM-and-friends generation, but the term technically covers much more.
+
+**Machine Learning (ML).** A subset of AI. The approach where instead of programming a computer to do a task directly, you give it data and an algorithm that adjusts itself to perform the task. ML has been the dominant approach in AI for decades and includes everything from spam filters (1990s) to recommendation systems (2000s) to image recognition (2010s) to LLMs (2020s). Most contemporary "AI" is ML.
+
+**Deep Learning.** A subset of ML. The approach where the algorithm is a neural network with many layers (hence "deep"). Took off in the 2010s when it turned out that bigger networks plus more data plus more compute solved a lot of problems that had been stuck for decades. Powers image recognition, speech recognition, translation, and the whole generative AI wave.
+
+**Generative AI.** A category of AI systems that produce content — text, images, audio, video, code — rather than just classifying or predicting. LLMs are generative. Image generators (DALL-E, Midjourney, Stable Diffusion) are generative. Voice cloning tools are generative. The category is defined by what the system outputs, not how it works.
+
+**Large Language Model (LLM).** A specific kind of generative AI: a deep neural network trained on a huge amount of text to predict tokens, which produces models capable of generating fluent text. "Large" historically meant billions of parameters; today the biggest are over a trillion. The architecture is almost always a transformer (Module 3).
+
+**Foundation Model.** An umbrella term for large pre-trained models that can be adapted to many tasks. LLMs are foundation models. So are large vision models. The point of the term is to emphasise that these models serve as *foundations* on which many downstream applications are built.
+
+**Frontier Model.** A loose term for the most capable models at any given time. There's no formal definition. Frontier today means models like GPT-4-class, Claude Opus-class, Gemini Ultra-class. Frontier moves.
+
+**Agent.** A system built around an LLM that can take actions in the world — call tools, browse the web, write and run code, send emails, control browsers. The model still just predicts tokens, but the surrounding software interprets those tokens as commands to take actions. Agents are early and unreliable, but they're where a lot of current development is focused.
+
+**RAG (Retrieval-Augmented Generation).** A technique where, before the model answers a question, relevant documents are looked up and inserted into the context. Lets the model "know" things outside its training. Common in enterprise deployments and any chatbot that's supposed to be grounded in specific documentation.
+
+**Multimodal.** A model that handles more than one type of input or output — text plus images, or text plus audio, or all of the above. Most frontier models are multimodal now.
+
+### The mapping you need
+
+If someone says "AI is taking over knowledge work," they almost certainly mean LLMs and generative AI. If someone says "we use AI in our recommendation engine," they probably mean a non-generative ML system, which has been around for decades. If someone says "ML model," they could mean almost anything. If someone says "we're using a foundation model," they mean an LLM or equivalent.
+
+Knowing where in the hierarchy any given system sits — and not letting "AI" function as a catch-all that obscures what's actually being used — is the kind of vocabulary precision that signals you've actually engaged with the field rather than the discourse about the field.

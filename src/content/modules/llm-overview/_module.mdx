@@ -1,0 +1,39 @@
+---
+title: "What is an LLM? (The view from outside)"
+number: 1
+summary: "Starting at the top of the stack: what LLMs actually do, what happens when you send a message, and the vocabulary you need to think clearly about them."
+difficulty: 1
+---
+
+*The question this module answers: when I type to ChatGPT or Claude, what's actually happening?*
+
+This module is the entry point to the whole curriculum. We're starting at the top of the stack — the user-facing surface of large language models — and across the seven lessons below, we'll work out what the surface is actually telling us, what it's hiding, and what vocabulary you need to think clearly about this technology.
+
+By the end you should be able to hold a fifteen-minute conversation with a sceptical academic without saying anything cringeworthy or wrong.
+
+---
+
+## End of Module 1 — what you should be able to do
+
+By the end of this module you should be able to:
+
+- Explain to a stranger what an LLM does without using metaphors that mislead
+- Trace what happens when someone sends a message to a chatbot, from the interface to the data centre and back
+- Define a token and explain why it matters
+- Distinguish training from inference and explain why the distinction shapes everything
+- Name the major LLM labs and what closed-weight vs open-weight means
+- Talk about hallucination in technically accurate terms
+- Use AI / ML / LLM / generative AI correctly
+
+If you can hold a fifteen-minute conversation with a sceptical academic using these concepts, Module 1 has done its job.
+
+### Cross-cutting threads touched in this module
+
+- **Abstraction** — we've already met it: the chat interface hides the server, the server hides the model, the model hides the maths. Every layer of computing works this way.
+- **Representation/encoding** — tokenisation is the first time we see text turned into numbers. This same trick (encode meaning as numbers) recurs at every layer below.
+- **State and memory** — the model is stateless; the product fakes continuity. The distinction between "the system remembers" and "the system has memory" matters constantly.
+- **Protocols and contracts** — HTTP, the chat format, system prompts — every layer has its own agreement about how messages are structured.
+
+### Where Module 2 picks up
+
+Module 2 — *How LLMs actually predict (mechanics without maths)* — takes the "it predicts the next token" claim from this module and unpacks it. What does "predict" mean here? What's a probability distribution over a vocabulary? Why do you get different answers when you ask the same question twice? Why are models bad at counting and good at writing? We get one layer closer to the machinery, but we still don't touch the linear algebra.

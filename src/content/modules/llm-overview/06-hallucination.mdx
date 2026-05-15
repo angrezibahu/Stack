@@ -1,0 +1,40 @@
+---
+title: "Hallucination, lying, and the limits of metaphor"
+order: 6
+estimated_minutes: 8
+threads: []
+---
+
+"Hallucination" is the most overused word in AI discourse. It also doesn't quite mean what most people think.
+
+In the technical literature, hallucination refers to a model producing content that isn't supported by its inputs or by reality — confidently stating something that simply isn't true. A made-up citation. A non-existent court case. A fictional historical event presented as fact. A summary of a document that includes things the document doesn't say.
+
+The word borrows from psychiatry, where a hallucination is a perception without a real external cause. The analogy is strained. Models don't perceive anything. The phenomenon is closer to *confabulation* — producing plausible-sounding output that fills in for missing information — but "hallucinate" stuck because it sounds more dramatic and is easier to say.
+
+### What's actually going on, mechanically
+
+The model is trained to predict the most likely next token. When it produces text on a topic it has good training data for, the predictions tend to align with reality, because reality was well-represented in the training set. When it produces text on a topic it has thin or contradictory data for, the predictions still feel confident — because the model has no native concept of "I'm not sure" — but they're effectively guesses. Sometimes the guesses are right. Sometimes they're plausible-sounding nonsense.
+
+There is no internal "uncertainty meter" the model checks before speaking. It produces tokens that are likely given the context. Confidence in the output reflects the model's training, not the truth of the claim. A confident-sounding paragraph about a real topic and a confident-sounding paragraph about a fabricated topic come out of the same machinery.
+
+### Why "lying" is the wrong word too
+
+When a model produces false information, it isn't lying. Lying requires knowing the truth and choosing to misrepresent it. The model doesn't know the truth in any meaningful sense. It's producing text that pattern-matches to "answer to this question," and the answer happens to be wrong. There's no deception, because there's no intent.
+
+This matters legally and ethically. Calling LLM output "lying" assigns agency that isn't there, and it lets the humans who deployed the system off the hook. The more accurate framing is: the system produced incorrect output, and the responsibility for that output sits with whoever deployed and represented the system.
+
+### What models are reliably good and bad at
+
+**Good at:** paraphrasing, summarising, translation (between major languages), writing in a given style, generating ideas, drafting structured content, explaining well-known concepts, working through well-known reasoning patterns.
+
+**Bad at:** specific facts (especially numbers, dates, names of less-famous things), counting and arithmetic involving more than a few items, reasoning about things outside their training distribution, anything requiring up-to-date information, anything requiring genuine understanding of physical or social context the model can't observe.
+
+The pattern: models are reliable where their training data was rich and the task is generative or transformative. Models are unreliable where they're effectively asked to retrieve specific facts from memory, especially obscure or recent ones.
+
+### The honest way to talk about LLM errors
+
+Instead of "the AI hallucinated," try: "the model produced unsupported content." Instead of "the AI lied," try: "the output was incorrect and the system gave no signal that it might be." Instead of "the AI doesn't know," try: "the model's training didn't include enough on this topic for reliable output."
+
+These phrasings are less catchy but more accurate. They keep the agency where it belongs (with the people deploying and using the system) and they describe the phenomenon without anthropomorphising.
+
+For a university audience, this precision will distinguish you from people who've read three Wired articles about AI. Saying "the model lacks reliable retrieval of specific facts and tends to produce plausible-sounding completions when its training is thin" is more useful than "AI hallucinates."
