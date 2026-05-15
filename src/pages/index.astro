@@ -1,0 +1,98 @@
+---
+import Base from '~/layouts/Base.astro';
+import ProgressBar from '~/components/ProgressBar.astro';
+import {
+  getAllModulesSorted,
+  getLessonsForModule,
+  moduleHref,
+  type Module,
+} from '~/lib/lessons';
+
+const modules = await getAllModulesSorted();
+
+const moduleData = await Promise.all(
+  modules.map(async (m: Module) => {
+    const folder = m.id.split('/')[0]!;
+    const lessons = await getLessonsForModule(folder);
+    return {
+      module: m,
+      folder,
+      lessonIds: lessons.map((l) => l.id),
+    };
+  }),
+);
+
+const difficultyDots = (d: number) => '●'.repeat(d) + '○'.repeat(3 - d);
+---
+
+<Base description="A personal curriculum from LLMs at the top of the stack to electronics at the bottom.">
+  <section class="mb-10">
+    <h1 class="text-2xl font-semibold tracking-tight mb-2">Stack</h1>
+    <p class="max-w-[60ch] text-[15px] leading-relaxed" style="color: var(--color-ink-muted);">
+      A working-through of personal computing from the top of the abstraction
+      stack to the bottom. Start at LLMs. End at electrons. Each module
+      builds on the one below it.
+    </p>
+  </section>
+
+  <ol class="space-y-1">
+    {
+      moduleData.map(({ module, folder, lessonIds }) => {
+        const m = module.data;
+        const href = m.status === 'available' ? moduleHref(folder) : `/coming-soon`;
+        const isAvailable = m.status === 'available';
+        return (
+          <li>
+            <a
+              href={href}
+              class="block rounded-lg px-3 py-3 -mx-3 hover:[background:var(--color-paper-raised)] no-underline"
+              data-available={isAvailable}
+            >
+              <div class="flex items-baseline gap-3">
+                <span
+                  class="font-mono text-xs tabular-nums"
+                  style="color: var(--color-ink-faint);"
+                >
+                  {String(m.number).padStart(2, '0')}
+                </span>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <h2 class="font-semibold tracking-tight text-[15px]">
+                      {m.title}
+                    </h2>
+                    {!isAvailable && (
+                      <span
+                        class="text-[10px] uppercase tracking-wider rounded-sm px-1.5 py-0.5"
+                        style="background: var(--color-paper-raised); color: var(--color-ink-faint);"
+                      >
+                        Coming soon
+                      </span>
+                    )}
+                  </div>
+                  <p
+                    class="text-sm leading-snug mt-0.5"
+                    style="color: var(--color-ink-muted);"
+                  >
+                    {m.summary}
+                  </p>
+                  {isAvailable && lessonIds.length > 0 && (
+                    <div class="mt-2">
+                      <ProgressBar lessonIds={lessonIds} />
+                    </div>
+                  )}
+                </div>
+                <span
+                  class="font-mono text-[10px] tabular-nums shrink-0"
+                  style="color: var(--color-ink-faint);"
+                  title={`Difficulty ${m.difficulty}/3`}
+                >
+                  {difficultyDots(m.difficulty)}
+                </span>
+              </div>
+            </a>
+          </li>
+        );
+      })
+    }
+  </ol>
+</Base>

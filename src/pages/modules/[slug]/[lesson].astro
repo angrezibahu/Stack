@@ -1,0 +1,110 @@
+---
+import { render } from 'astro:content';
+import Base from '~/layouts/Base.astro';
+import CompleteButton from '~/components/CompleteButton.astro';
+import {
+  getAllModulesSorted,
+  getLessonsForModule,
+  lessonHref,
+  lessonSlugFromId,
+  moduleHref,
+  urlSlugFromFolder,
+} from '~/lib/lessons';
+import { THREAD_META, type ThreadKey } from '~/content.config';
+
+export async function getStaticPaths() {
+  const modules = await getAllModulesSorted();
+  const paths: Array<{
+    params: { slug: string; lesson: string };
+    props: { folder: string; lessonId: string };
+  }> = [];
+  for (const mod of modules) {
+    if (mod.data.status !== 'available') continue;
+    const folder = mod.id.split('/')[0]!;
+    const lessons = await getLessonsForModule(folder);
+    for (const lesson of lessons) {
+      paths.push({
+        params: {
+          slug: urlSlugFromFolder(folder),
+          lesson: lessonSlugFromId(lesson.id),
+        },
+        props: { folder, lessonId: lesson.id },
+      });
+    }
+  }
+  return paths;
+}
+
+const { folder, lessonId } = Astro.props as { folder: string; lessonId: string };
+const modules = await getAllModulesSorted();
+const mod = modules.find((m) => m.id.split('/')[0] === folder)!;
+const lessons = await getLessonsForModule(folder);
+const idx = lessons.findIndex((l) => l.id === lessonId);
+const lesson = lessons[idx]!;
+const prev = idx > 0 ? lessons[idx - 1] : null;
+const next = idx < lessons.length - 1 ? lessons[idx + 1] : null;
+const { Content } = await render(lesson);
+const threads = (lesson.data.threads ?? []) as ThreadKey[];
+---
+
+<Base title={lesson.data.title} description={mod.data.summary}>
+  <article>
+    <p class="text-xs font-mono mb-2" style="color: var(--color-ink-faint);">
+      <a href={moduleHref(folder)} class="hover:[color:var(--color-ink-muted)]">
+        Module {String(mod.data.number).padStart(2, '0')} · {mod.data.title}
+      </a>
+    </p>
+    <h1 class="text-[1.8rem] leading-tight font-semibold tracking-tight mb-2">
+      {lesson.data.title}
+    </h1>
+    <p class="text-xs mb-8 flex items-center gap-3" style="color: var(--color-ink-faint);">
+      <span>{lesson.data.estimated_minutes} min read</span>
+      {
+        threads.length > 0 && (
+          <span class="flex gap-2">
+            {threads.map((t) => (
+              <a
+                href={`/threads#${t}`}
+                class="rounded-sm px-1.5 py-0.5 no-underline hover:[color:var(--color-ink-muted)]"
+                style="background: var(--color-paper-raised);"
+              >
+                {THREAD_META[t]?.name ?? t}
+              </a>
+            ))}
+          </span>
+        )
+      }
+    </p>
+
+    <div class="prose-reader">
+      <Content />
+    </div>
+
+    <div class="mt-12 flex items-center justify-between gap-3 flex-wrap">
+      <CompleteButton lessonId={lesson.id} />
+      <div class="flex items-center gap-3 text-sm" style="color: var(--color-ink-muted);">
+        {
+          prev ? (
+            <a href={lessonHref(folder, prev.id)} class="no-underline hover:[color:var(--color-ink)]">
+              ← {prev.data.title}
+            </a>
+          ) : (
+            <span style="color: var(--color-ink-faint);">←</span>
+          )
+        }
+        <span style="color: var(--color-ink-faint);">·</span>
+        {
+          next ? (
+            <a href={lessonHref(folder, next.id)} class="no-underline hover:[color:var(--color-ink)]">
+              {next.data.title} →
+            </a>
+          ) : (
+            <a href={moduleHref(folder)} class="no-underline hover:[color:var(--color-ink)]">
+              Back to module →
+            </a>
+          )
+        }
+      </div>
+    </div>
+  </article>
+</Base>

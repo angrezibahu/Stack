@@ -1,0 +1,73 @@
+---
+import Base from '~/layouts/Base.astro';
+import { THREAD_KEYS, THREAD_META } from '~/content.config';
+import { getCollection } from 'astro:content';
+import {
+  getAllModulesSorted,
+  lessonHref,
+  moduleSlugOfLesson,
+} from '~/lib/lessons';
+
+const lessons = await getCollection('lessons');
+const modules = await getAllModulesSorted();
+const moduleFolders = new Set(
+  modules.filter((m) => m.data.status === 'available').map((m) => m.id.split('/')[0]!),
+);
+
+const lessonsByThread: Record<string, typeof lessons> = {};
+for (const key of THREAD_KEYS) lessonsByThread[key] = [];
+for (const l of lessons) {
+  if (l.data.draft) continue;
+  if (!moduleFolders.has(moduleSlugOfLesson(l))) continue;
+  for (const t of l.data.threads ?? []) {
+    lessonsByThread[t]?.push(l);
+  }
+}
+---
+
+<Base title="Threads" description="The four cross-cutting ideas that thread through the whole stack.">
+  <h1 class="text-2xl font-semibold tracking-tight mb-2">Threads</h1>
+  <p class="max-w-[60ch] text-[15px] leading-relaxed mb-10" style="color: var(--color-ink-muted);">
+    Four ideas that recur at every level of the stack. The modules go
+    top-down through abstraction layers; these threads run sideways through
+    all of them.
+  </p>
+
+  <div class="space-y-10">
+    {
+      THREAD_KEYS.map((key) => {
+        const meta = THREAD_META[key];
+        const items = lessonsByThread[key] ?? [];
+        return (
+          <section id={key}>
+            <h2 class="text-lg font-semibold tracking-tight mb-2">{meta.name}</h2>
+            <p
+              class="max-w-[60ch] text-[15px] leading-relaxed"
+              style="color: var(--color-ink-muted);"
+            >
+              {meta.description}
+            </p>
+            {items.length > 0 && (
+              <ul class="mt-4 space-y-1 text-sm">
+                {items.map((l) => {
+                  const folder = moduleSlugOfLesson(l);
+                  return (
+                    <li>
+                      <a
+                        href={lessonHref(folder, l.id)}
+                        class="no-underline hover:[color:var(--color-ink)]"
+                        style="color: var(--color-ink-muted);"
+                      >
+                        — {l.data.title}
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </section>
+        );
+      })
+    }
+  </div>
+</Base>

@@ -1,0 +1,81 @@
+---
+import Base from '~/layouts/Base.astro';
+import ProgressBar from '~/components/ProgressBar.astro';
+import LessonStatusDot from '~/components/LessonStatusDot.astro';
+import {
+  getAllModulesSorted,
+  getLessonsForModule,
+  lessonHref,
+  urlSlugFromFolder,
+} from '~/lib/lessons';
+
+export async function getStaticPaths() {
+  const modules = await getAllModulesSorted();
+  return modules
+    .filter((m) => m.data.status === 'available')
+    .map((m) => {
+      const folder = m.id.split('/')[0]!;
+      return { params: { slug: urlSlugFromFolder(folder) }, props: { folder } };
+    });
+}
+
+const { folder } = Astro.props as { folder: string };
+const modules = await getAllModulesSorted();
+const mod = modules.find((m) => m.id.split('/')[0] === folder)!;
+const lessons = await getLessonsForModule(folder);
+const lessonIds = lessons.map((l) => l.id);
+---
+
+<Base title={mod.data.title} description={mod.data.summary}>
+  <p class="text-xs font-mono mb-2" style="color: var(--color-ink-faint);">
+    Module {String(mod.data.number).padStart(2, '0')}
+  </p>
+  <h1 class="text-2xl font-semibold tracking-tight mb-3">{mod.data.title}</h1>
+  <p class="max-w-[60ch] text-[15px] leading-relaxed mb-6" style="color: var(--color-ink-muted);">
+    {mod.data.summary}
+  </p>
+
+  {
+    lessonIds.length > 0 && (
+      <div class="mb-8 max-w-md">
+        <ProgressBar lessonIds={lessonIds} label="complete" />
+      </div>
+    )
+  }
+
+  {
+    lessons.length === 0 ? (
+      <p style="color: var(--color-ink-muted);">No lessons yet.</p>
+    ) : (
+      <ol class="space-y-1">
+        {lessons.map((lesson, i) => (
+          <li>
+            <a
+              href={lessonHref(folder, lesson.id)}
+              class="flex items-center gap-3 px-3 py-2.5 -mx-3 rounded-md hover:[background:var(--color-paper-raised)] no-underline"
+            >
+              <LessonStatusDot lessonId={lesson.id} />
+              <span
+                class="font-mono text-xs tabular-nums w-6 shrink-0"
+                style="color: var(--color-ink-faint);"
+              >
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <span class="flex-1 text-[15px]">{lesson.data.title}</span>
+              <span
+                class="text-xs tabular-nums shrink-0"
+                style="color: var(--color-ink-faint);"
+              >
+                {lesson.data.estimated_minutes} min
+              </span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    )
+  }
+
+  <div class="mt-10">
+    <a href="/" class="text-sm" style="color: var(--color-ink-muted);">← All modules</a>
+  </div>
+</Base>

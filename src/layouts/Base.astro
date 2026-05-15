@@ -1,0 +1,53 @@
+---
+import '~/styles/global.css';
+import ThemeScript from '~/components/ThemeScript.astro';
+import Header from '~/components/Header.astro';
+import { pwaInfo } from 'virtual:pwa-info';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+const fullTitle = title ? `${title} · Stack` : 'Stack';
+const desc =
+  description ?? 'A personal computing curriculum, top of the stack to the bottom.';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{fullTitle}</title>
+    <meta name="description" content={desc} />
+    <meta name="theme-color" content="#0b0c0e" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#faf9f6" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Stack" />
+    <ThemeScript />
+    {pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} />}
+  </head>
+  <body class="min-h-dvh">
+    <Header />
+    <main class="mx-auto max-w-3xl px-5 py-8">
+      <slot />
+    </main>
+    <footer class="mx-auto max-w-3xl px-5 py-10 text-xs" style="color: var(--color-ink-faint);">
+      <div class="flex items-center justify-between border-t rule pt-4">
+        <span>Stack — personal curriculum</span>
+        <a href="/settings" class="hover:[color:var(--color-ink-muted)]">Settings</a>
+      </div>
+    </footer>
+
+    <script>
+      import { registerSW } from 'virtual:pwa-register';
+      registerSW({ immediate: true });
+    </script>
+  </body>
+</html>

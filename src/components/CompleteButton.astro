@@ -1,0 +1,48 @@
+---
+interface Props {
+  lessonId: string;
+}
+const { lessonId } = Astro.props;
+---
+
+<button
+  type="button"
+  data-complete-button
+  data-lesson-id={lessonId}
+  class="rounded-md border rule px-3 py-1.5 text-sm transition-colors"
+  style="color: var(--color-ink);"
+>
+  <span data-label>Mark complete</span>
+</button>
+
+<script>
+  import { isComplete, setComplete, onChange } from '~/lib/progress';
+
+  function render(btn: HTMLButtonElement) {
+    const id = btn.dataset.lessonId!;
+    const done = isComplete(id);
+    const label = btn.querySelector<HTMLElement>('[data-label]');
+    if (label) label.textContent = done ? 'Completed ✓' : 'Mark complete';
+    btn.dataset.done = done ? 'true' : 'false';
+    btn.style.background = done ? 'var(--color-paper-raised)' : 'transparent';
+    btn.style.color = done ? 'var(--color-accent)' : 'var(--color-ink)';
+  }
+
+  function renderAll() {
+    document
+      .querySelectorAll<HTMLButtonElement>('[data-complete-button]')
+      .forEach(render);
+  }
+
+  renderAll();
+  onChange(renderAll);
+
+  document.addEventListener('click', (e) => {
+    const target = (e.target as HTMLElement | null)?.closest<HTMLButtonElement>(
+      '[data-complete-button]',
+    );
+    if (!target) return;
+    const id = target.dataset.lessonId!;
+    setComplete(id, !isComplete(id));
+  });
+</script>

@@ -1,0 +1,5 @@
+# Optional: only needed if deploying via `wrangler pages deploy` from the CLI.
+# Cloudflare Pages auto-deploy from GitHub does not require this file.
+name = "stack"
+compatibility_date = "2024-12-01"
+pages_build_output_dir = "dist"
