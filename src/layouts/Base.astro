@@ -25,8 +25,8 @@ const desc =
     <meta name="description" content={desc} />
     <meta name="theme-color" content="#0b0c0e" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#faf9f6" media="(prefers-color-scheme: light)" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}/favicon.svg`} />
+    <link rel="apple-touch-icon" href={`${import.meta.env.BASE_URL}/icons/apple-touch-icon.png`} />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Stack" />
@@ -41,7 +41,7 @@ const desc =
     <footer class="mx-auto max-w-3xl px-5 py-10 text-xs" style="color: var(--color-ink-faint);">
       <div class="flex items-center justify-between border-t rule pt-4">
         <span>Stack — personal curriculum</span>
-        <a href="/settings" class="hover:[color:var(--color-ink-muted)]">Settings</a>
+        <a href={`${import.meta.env.BASE_URL}/settings`} class="hover:[color:var(--color-ink-muted)]">Settings</a>
       </div>
     </footer>
 

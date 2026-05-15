@@ -39,7 +39,7 @@ const difficultyDots = (d: number) => '●'.repeat(d) + '○'.repeat(3 - d);
     {
       moduleData.map(({ module, folder, lessonIds }) => {
         const m = module.data;
-        const href = m.status === 'available' ? moduleHref(folder) : `/coming-soon`;
+        const href = m.status === 'available' ? moduleHref(folder) : `${import.meta.env.BASE_URL}/coming-soon`;
         const isAvailable = m.status === 'available';
         return (
           <li>
