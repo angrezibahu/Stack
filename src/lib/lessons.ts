@@ -32,9 +32,9 @@ export async function getLessonsForModule(moduleFolder: string): Promise<Lesson[
 }
 
 export function lessonHref(moduleFolder: string, lessonId: string): string {
-  return `/modules/${urlSlugFromFolder(moduleFolder)}/${lessonSlugFromId(lessonId)}`;
+  return `${import.meta.env.BASE_URL}modules/${urlSlugFromFolder(moduleFolder)}/${lessonSlugFromId(lessonId)}`;
 }
 
 export function moduleHref(moduleFolder: string): string {
-  return `/modules/${urlSlugFromFolder(moduleFolder)}`;
+  return `${import.meta.env.BASE_URL}modules/${urlSlugFromFolder(moduleFolder)}`;
 }

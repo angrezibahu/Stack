@@ -4,7 +4,8 @@ import tailwindcss from '@tailwindcss/vite';
 import AstroPWA from '@vite-pwa/astro';
 
 export default defineConfig({
-  site: 'https://stack.pages.dev',
+  site: 'https://angrezibahu.github.io',
+  base: '/Stack',
   integrations: [
     mdx(),
     AstroPWA({
@@ -19,8 +20,8 @@ export default defineConfig({
         background_color: '#0b0c0e',
         display: 'standalone',
         orientation: 'portrait',
-        start_url: '/',
-        scope: '/',
+        start_url: '/Stack/',
+        scope: '/Stack/',
         icons: [
           {
             src: '/icons/icon-192.png',
@@ -42,7 +43,7 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{html,js,css,svg,png,woff2,webmanifest}'],
-        navigateFallback: '/offline',
+        navigateFallback: '/Stack/offline',
         navigateFallbackDenylist: [/^\/api\//],
         runtimeCaching: [
           {

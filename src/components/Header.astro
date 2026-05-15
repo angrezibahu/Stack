@@ -1,11 +1,12 @@
 ---
 const { pathname } = Astro.url;
-const isHome = pathname === '/' || pathname === '';
+const base = import.meta.env.BASE_URL;
+const isHome = pathname === base || pathname === base.replace(/\/$/, '');
 ---
 
 <header class="border-b rule">
   <div class="mx-auto max-w-3xl px-5 py-4 flex items-center justify-between gap-4">
-    <a href="/" class="no-underline flex items-center gap-2" aria-label="Stack home">
+    <a href={base} class="no-underline flex items-center gap-2" aria-label="Stack home">
       <span
         class="inline-block w-6 h-6 rounded-sm border rule flex items-center justify-center"
         style="background: var(--color-paper-raised);"
@@ -17,8 +18,8 @@ const isHome = pathname === '/' || pathname === '';
       <span class="font-semibold tracking-tight">Stack</span>
     </a>
     <nav class="flex items-center gap-5 text-sm" style="color: var(--color-ink-muted);">
-      {!isHome && <a href="/" class="hover:[color:var(--color-ink)]">Modules</a>}
-      <a href="/threads" class="hover:[color:var(--color-ink)]">Threads</a>
+      {!isHome && <a href={base} class="hover:[color:var(--color-ink)]">Modules</a>}
+      <a href={`${base}threads`} class="hover:[color:var(--color-ink)]">Threads</a>
       <button
         id="theme-toggle"
         type="button"
