@@ -1,0 +1,41 @@
+---
+title: "The LLM family tree"
+order: 5
+estimated_minutes: 7
+threads: []
+---
+
+Lots of LLMs exist. They differ in size, training data, fine-tuning, openness, cost, and capability. Knowing roughly who's who saves you from talking about "AI" as if it's one thing.
+
+### The major players (as of mid-2026)
+
+- **OpenAI** (US) — makes ChatGPT and the GPT model family. The original mass-market AI lab. Backed heavily by Microsoft. Models are closed-weight (you can't download them; you access them via API or product).
+- **Anthropic** (US) — makes Claude. Founded by ex-OpenAI researchers. Heavy emphasis on safety research. Closed-weight. Backed by Amazon and Google.
+- **Google DeepMind** (US/UK) — makes Gemini. Combination of two research labs Google merged. Massive resources. Closed-weight.
+- **Meta** (US) — makes Llama. Notable for releasing the model weights publicly ("open-weight"), which has had enormous effects on the research ecosystem.
+- **Mistral** (France) — open-weight models, European positioning, smaller but punchy.
+- **DeepSeek, Qwen, others** (China) — Chinese labs producing increasingly competitive models, some open-weight.
+- **xAI** (US) — Elon Musk's lab, makes Grok.
+
+These labs broadly all use the same recipe: train a transformer on a huge text corpus, fine-tune for helpfulness, deploy via API and product. They differ in:
+
+- **Scale.** Bigger models (more parameters, more training data, more compute) generally perform better.
+- **Training data.** What text did they feed it? This affects what it knows and what biases it carries.
+- **Fine-tuning approach.** How was it taught to behave? This affects personality, refusals, helpfulness.
+- **Openness.** Closed-weight (OpenAI, Anthropic, Google) versus open-weight (Meta, Mistral). Open-weight means you can download and run them yourself; closed means you can only access them through the provider.
+- **Safety posture.** How cautious is it? What does it refuse? How was it shaped?
+- **Product wrapping.** What's around the model? Web search, code execution, memory, voice, image generation, agents.
+
+### Closed vs open weights — why it matters
+
+Closed-weight models live on the provider's servers. You send text, you get text back. You can't see inside. The provider controls updates, pricing, availability. If they shut down, your access goes.
+
+Open-weight models can be downloaded and run on your own hardware (if it's powerful enough — for the biggest models, that means serious gear). You can fine-tune them for your own purposes. You don't depend on the provider continuing to exist. But the original training costs were still borne by whoever made them — open-weight doesn't mean "free to train," it means "the trained weights are released after training."
+
+There's a parallel debate to open-source software here, but with extra complications. Even with the weights, you don't get the training data (mostly), you don't easily get the training code, and you can't really audit how the model came to be. "Open" in AI is a spectrum, and people argue fiercely about where each lab actually sits on it.
+
+### What this means for you
+
+When you're discussing "AI" in a university context, knowing that there are roughly five frontier labs (with several more close behind) and that they make subtly different choices is more useful than knowing which one is "the best." Performance leadership rotates every few months. What's stable is the structure: a small number of well-resourced labs making models, a larger number of companies using those models in products, an ecosystem of researchers studying their behaviour.
+
+A useful sentence: "When we say 'AI,' which AI? Claude, Gemini, ChatGPT, Llama, and Mistral are all different products from different organisations with different choices. They share a family resemblance but the differences matter."

@@ -1,0 +1,53 @@
+---
+title: "What you see and what's happening"
+order: 1
+estimated_minutes: 9
+threads: [abstraction]
+---
+
+The user experience of an LLM is deceptively simple. You type something. After a brief pause, words appear on the screen, usually quickly, often one chunk at a time as if the system is typing. The reply is in plain language. It addresses what you said. It might ask you a question back, make a joke, refuse a request, or hallucinate a citation.
+
+Almost nothing about this surface experience tells you what's actually happening underneath. That's both the magic and the problem.
+
+Consider what you might assume is going on, based on how the system feels:
+
+- That there's a "Claude" or a "ChatGPT" — an entity with persistent identity that remembers things between conversations
+- That the system is "thinking" while you wait for the reply
+- That when it pauses, it's choosing its words carefully
+- That when it gets something wrong, it's because it didn't try hard enough or wasn't told properly
+- That when it says "I" it means something by it
+- That when it apologises, it feels something
+
+Every one of those assumptions is wrong, or at best a useful metaphor that breaks down under inspection. The model has no persistent memory across conversations (unless you explicitly give it tools that simulate one). It isn't "thinking" in any sense a human would recognise. It isn't choosing its words; it's sampling from a probability distribution. When it apologises, it's predicting that "I apologise" is the most likely text in context — not having a feeling.
+
+This isn't to deflate the technology. It's enormously impressive. But to understand it, you need to start by being suspicious of the surface metaphor. The interface is designed to be welcoming, and welcoming interfaces lie about what's underneath.
+
+### A better starting frame
+
+An LLM is a piece of software that, given some text, produces more text. That's it. Everything else — the helpfulness, the chattiness, the apparent reasoning — comes from how it produces that text and from a layer of conventions wrapped around the core. We'll peel those layers in this module.
+
+### What the model does NOT do (despite appearances)
+
+- **It does not look anything up.** It is not Googling in the background. When it tells you facts, it's reproducing patterns from its training, which may or may not be accurate. (Some products *do* search the web on the model's behalf, but that's a separate system bolted on; the model itself doesn't browse.)
+- **It does not reason in the way a calculator does.** It produces text that looks like reasoning, which sometimes is reasoning and sometimes isn't. You cannot tell which from the output alone.
+- **It does not "know" things in the way a database does.** There is no fact table. Everything it "knows" is encoded as patterns in its weights.
+- **It does not have intentions, preferences, beliefs, or feelings.** It has weights that, when run with your text, produce text that often *describes* intentions, preferences, beliefs, and feelings. The word "describes" is doing a lot of work in that sentence.
+
+### The uncomfortable bit
+
+Even the people who built these systems can't fully explain why they work as well as they do. The architecture is well-understood. The training method is well-understood. But why a particular output emerges from a particular input — at the level of individual decisions inside the network — is currently beyond our ability to inspect. That's an active research area called *interpretability*, and it's full of brilliant people who would tell you cheerfully that they don't really know what's going on inside.
+
+Hold this thought, because it matters more than it sounds: a technology that is changing knowledge work, education, medicine, and law is one that nobody — not the CEO, not the lead researcher, not the safety team — can fully explain mechanistically. That's a strange situation in engineering. We're more used to it in pharmacology, where drugs work and we have hypotheses about why. Treat AI a bit more like that.
+
+### Why this matters for how you talk about LLMs
+
+If you're going to defend your understanding to a random person in the street, or to a senior academic, the first test isn't transformers or backpropagation. It's the framing. People come to LLMs with expectations imported from sci-fi (HAL, the Terminator, Data from Star Trek), search engines (it must be looking things up), or calculators (it must be computing answers). The first move is to gently dismantle those frames.
+
+Useful sentences to have ready:
+
+- "An LLM is a text-prediction system that's been trained on so much text that its predictions look like understanding."
+- "It doesn't look things up; it pattern-matches from training."
+- "When it sounds confident, that's a style learned from confident text. It's not a measure of accuracy."
+- "It doesn't 'know' anything. It has weights that produce text-shaped outputs."
+
+These sentences are deflating, which is the point. The technology is genuinely remarkable *and* genuinely simpler than its surface suggests. Both things at once.

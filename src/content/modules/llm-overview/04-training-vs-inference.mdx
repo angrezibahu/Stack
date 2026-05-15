@@ -1,0 +1,54 @@
+---
+title: "Training vs inference: the two completely different things"
+order: 4
+estimated_minutes: 9
+threads: [state-and-memory]
+---
+
+If you take only one technical distinction away from this module, make it this one.
+
+There are two completely separate phases in the life of an LLM:
+
+1. **Training.** Building the model. This is a massive, one-off (or occasionally repeated) computational process where the model's weights are adjusted by feeding it huge amounts of text and gradually making it better at predicting what comes next. It costs millions of dollars, takes weeks or months, and is done on enormous clusters of specialised hardware. The output of training is a file — sometimes hundreds of gigabytes — containing the model's weights.
+
+2. **Inference.** Using the model. This is what happens every time you send a message. The pre-trained weights are loaded onto a GPU, your input is fed in, and the model produces output. Inference is fast (seconds), comparatively cheap (fractions of a penny per query, often), and happens billions of times per day across the world.
+
+These are different in almost every way that matters: cost, time, hardware, who does it, when it happens, what it produces.
+
+A cooking analogy: training is developing the recipe and writing the cookbook. Inference is using the cookbook to make a meal. The recipe-writing takes years and involves dozens of chefs experimenting. The meal-making takes thirty minutes and anyone can do it once they have the book.
+
+### Why this distinction matters constantly
+
+*"Why can't ChatGPT remember our conversation from last week?"* Because the model isn't being retrained on your conversations. Your chats don't change the weights. Unless the company explicitly trains a new version using your data (and the terms vary by company and product), your conversations leave no trace inside the model. They might be stored in a database for product purposes, but the model itself doesn't update from them.
+
+*"Why does the model know about the 2022 World Cup but not yesterday's news?"* Because the model was trained on text up to a certain date — the *training cutoff* — and hasn't been retrained since. Anything that happened after the cutoff is genuinely outside the model's knowledge. Products may bolt on web search to compensate, but the underlying model itself is frozen.
+
+*"Why is training so expensive but using the model is so cheap?"* Because training involves running the model through every example in a massive dataset, repeatedly, while adjusting billions of weights. Inference just runs the model forward once. The asymmetry is huge — training a frontier model might cost $100 million; running it for a query costs cents.
+
+*"Can the model 'learn' during our conversation?"* In a meaningful sense, no. The weights don't change. What can happen is that the model uses information you give it within the context window — so if you tell it your name at the start of a chat, it can refer to it later. But that's working memory, not learning. Close the chat and the "learning" evaporates.
+
+### The hidden third phase: fine-tuning
+
+I lied slightly. There are actually two-and-a-half phases.
+
+After the initial massive training (called *pre-training*) — which produces a model that can predict next tokens really well but isn't yet a helpful chatbot — there's a smaller training phase called *fine-tuning*. This is where the model is taught to be helpful, follow instructions, refuse harmful requests, adopt a particular conversational style, and so on.
+
+Fine-tuning is much cheaper than pre-training (hours to days, not weeks) and uses much smaller, carefully curated datasets. It's where the "personality" of a chatbot gets installed. The same base model, fine-tuned differently, can become Claude or ChatGPT-flavoured or a customer service bot or a coding assistant.
+
+We'll go deep on this in Module 4. For now, just know that "training" in popular discourse usually means the whole training pipeline — pre-training plus fine-tuning — even though they're technically distinct.
+
+### Why journalists keep getting this wrong
+
+You'll often read headlines like "ChatGPT learned to lie" or "the AI is teaching itself." Almost always, this is sloppy. The model isn't learning anything in real time. What's actually happened is one of:
+
+- Researchers fine-tuned a new version with different behaviour
+- The model's existing behaviour (which was always there) was discovered or measured for the first time
+- A scaffolding system around the model (which CAN learn from interactions, in the sense of updating a database) did something new
+
+The model itself — the weights — doesn't change after deployment. When you read "the AI learned X," translate to "researchers trained a new model that does X" and you'll almost always be more accurate.
+
+### The takeaway
+
+Training and inference are separate phases. The model is frozen between training rounds. Your conversations don't update it. The model's knowledge is fixed at its training cutoff. The cost asymmetry between training and inference shapes everything about how AI products are built and priced. And almost every headline that says "AI learned" actually means "researchers trained a new model."
+
+Get this distinction clear and a lot of confused AI discourse suddenly resolves.
