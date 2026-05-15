@@ -1,0 +1,61 @@
+---
+title: "Tokens: how the model sees your text"
+order: 3
+estimated_minutes: 9
+threads: [encoding]
+---
+
+When you type "strawberry" into an LLM, the model does NOT see "strawberry." It sees a sequence of numbers.
+
+This isn't a metaphor or an oversimplification. It's literally what happens.
+
+Before any neural network can process text, the text has to be turned into numbers, because neural networks only do arithmetic. The conversion process is called *tokenisation*. The pieces of text that get converted are called *tokens*.
+
+A token is roughly a chunk of language. Sometimes a whole word. Sometimes part of a word. Sometimes punctuation. Sometimes a sequence of letters that doesn't even make a real word.
+
+For example, GPT-4's tokeniser breaks "strawberry" into something like:
+
+- `straw` (one token)
+- `berry` (one token)
+
+So the word "strawberry" is two tokens. Whereas "the" is one token. And "antidisestablishmentarianism" might be five or six tokens.
+
+Each token has an ID — an integer — that points to it in a giant lookup table called the *vocabulary*. GPT-4's vocabulary has about 100,000 tokens. So `straw` might be token 12,345 and `berry` might be token 67,890.
+
+When you send "strawberry" to the model, what actually arrives is `[12345, 67890]`. That's what the neural network processes.
+
+### Why does this matter?
+
+**It explains a famous failure mode.** People love to ask LLMs "how many r's are in 'strawberry'?" and laugh when the model says two. The reason the model is bad at this isn't that it's stupid. It's that the model doesn't see `s-t-r-a-w-b-e-r-r-y` as a sequence of letters. It sees `[12345, 67890]`. To count letters, it would need to somehow recover the spelling from the token IDs, which it learns to do unreliably from training data.
+
+This is the kind of thing where a beginner's mental model ("the model reads my words") leads to confusion, and the actual model ("the model receives numerical token IDs") explains the behaviour.
+
+**It explains why models charge by tokens, not words.** Every commercial LLM bills you per token, both in and out. A short word like "cat" is one token. A long word like "extracurricular" might be three or four. Code is often less efficient than English — symbols, indentation, and unusual identifiers can each be tokens. Other languages can be much less efficient: a sentence in Mandarin or Hindi often uses more tokens than the equivalent English sentence, because the tokenisers were trained predominantly on English text.
+
+That last point has cost and access implications: non-English users effectively pay more per equivalent content. It's an example of a bias that's not in the model's "opinions" — it's baked into the engineering itself. The same word in two languages can cost different amounts of money to send. Worth remembering when people talk about AI as a globally accessible technology.
+
+**It explains context window limits.** When you hear "Claude has a 200,000-token context window," that means the model can hold 200,000 tokens of conversation in its input at once. Roughly 150,000 English words, or 500 pages of a paperback. Past that, earlier content has to be dropped or summarised. The context window is measured in tokens because that's what the model actually processes.
+
+### A quick demonstration you can do yourself
+
+OpenAI publishes a tokeniser at platform.openai.com/tokenizer. You can paste any text in and see how it gets split. Try:
+
+- Your name
+- A sentence in another language
+- Some code
+- "supercalifragilisticexpialidocious"
+- A single emoji
+
+You'll see that tokenisation is messier than you'd expect. Spaces matter (`cat` and ` cat` — with leading space — are different tokens). Capitalisation matters. The same letter sequence can tokenise differently depending on what's around it.
+
+### Where do these tokens come from?
+
+The vocabulary isn't designed by hand. It's *learned* from a large corpus of text using an algorithm called Byte Pair Encoding (BPE) or variants. The algorithm starts with individual characters and progressively merges the most common pairs into single tokens. Common words like "the" end up as one token. Uncommon words get split into pieces. Rare characters (some emoji, some non-Latin scripts) might be multiple tokens each.
+
+This is a pragmatic engineering choice — it lets the model handle any text, including words it has never seen, by breaking them into known sub-pieces. But it has consequences: the vocabulary reflects whatever was in the corpus used to build it, which has biases toward common languages and writing systems.
+
+### The takeaway
+
+When you talk to an LLM, your text gets converted into a sequence of integers before the model ever sees it. The model's "experience" of your message is fundamentally different from yours. Many of the model's apparent strengths (handling typos gracefully, working across languages) and weaknesses (counting letters, exact spelling) trace back to this tokenisation step.
+
+If someone asks "but doesn't the model see the same text I do?" the honest answer is: no, it sees a coded version of the text, and most of the time the coding is good enough that you can pretend otherwise — but the cases where it isn't good enough are revealing.

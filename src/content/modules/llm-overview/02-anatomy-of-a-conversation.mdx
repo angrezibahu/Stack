@@ -1,0 +1,55 @@
+---
+title: "Anatomy of a conversation"
+order: 2
+estimated_minutes: 10
+threads: [abstraction, state-and-memory, protocols-and-contracts]
+---
+
+Let's trace what happens when you press send.
+
+1. You type a message into a chat interface — a website, a mobile app, or a desktop application. The interface is a piece of software running on your device.
+2. When you hit send, your text gets packaged up and sent over the internet to a server. This is an HTTP request — the same kind your browser uses for every webpage you visit. We'll go deep on HTTP in Module 8; for now, just know it's the standard way computers send messages to each other.
+3. The server receives your message and adds context. It bundles together:
+   - A "system prompt" (the operator's standing instructions: "You are Claude, made by Anthropic, you are helpful, here are some rules…")
+   - Any earlier messages in this conversation
+   - Your new message
+   - Sometimes additional data like the date, your location, or tool descriptions
+4. This whole bundle gets passed to the actual model — the neural network. The model is running on specialised hardware (GPUs, which we'll cover in Module 5), probably in a data centre, probably one of several different physical locations depending on load.
+5. The model processes the input and starts producing tokens — one at a time, in sequence. Each token is generated based on everything that came before it. (Tokens are the next lesson.)
+6. As tokens come out, they're streamed back over the internet to your interface. That's why you see the response appearing word-by-word: not because the model is "typing," but because the chunks are being sent as soon as they're generated.
+7. The interface renders the tokens as text on your screen.
+
+Two things to note here.
+
+### There is no "Claude" running between your messages
+
+When you hit send, a copy of the model is run with your input. When it finishes, that's it. The model doesn't sit around waiting. It doesn't think about your conversation. It doesn't remember you. The next time you send a message, the entire conversation history is shipped to the model again — because the model has no memory of its own. Every reply is a from-scratch computation that happens to receive the previous turns as input.
+
+This is one of the most counter-intuitive facts about LLMs. The "continuity" you experience in a chat is an illusion maintained by the server, which keeps your conversation history and re-sends it on each turn. The model is functionally stateless.
+
+There are products that simulate memory — Claude has a memory feature, ChatGPT has one — but these work by storing notes about you in a database and re-injecting them into the system prompt on later turns. They're external scaffolding, not model memory.
+
+### The model itself is just one part of a larger system
+
+The product you use — Claude on claude.ai, ChatGPT on chatgpt.com — is a *product wrapper* around a model. The wrapper does things the model doesn't:
+
+- Maintains conversation state
+- Routes requests to the right model size
+- Applies safety filters (sometimes before the model sees your input, sometimes after)
+- Runs tools on the model's behalf (web search, code execution, image generation)
+- Tracks usage and billing
+- Renders the UI
+
+When people compare "Claude vs ChatGPT" they're often really comparing products, not models. The underlying model is one component. Two products using the same underlying model can feel very different because of the wrapper. (This becomes important when you use models via the API in Module 6.)
+
+A useful mental model: think of the model as an engine and the product as a car. The engine matters enormously — a bad engine makes a bad car. But the steering, the interior, the brakes, the dashboard come from the product, not the engine. A great engine in a poor car still gives you a poor driving experience.
+
+### Where does your text go physically?
+
+This is worth pausing on because the physical reality gets glossed over in tech discourse.
+
+When you send a message to Claude, depending on routing, it might be processed in a data centre in Northern Virginia, Oregon, Dublin, or several other locations. Those data centres are buildings the size of warehouses, filled with rows of servers, cooled by industrial air conditioning, drawing megawatts of power, with thousands of specialised chips (GPUs) doing trillions of arithmetic operations per second to produce your reply.
+
+Each message you send has a physical cost. Energy gets consumed. Water gets used for cooling. Heat gets dumped. The carbon footprint of a single LLM query is small compared to, say, a Netflix stream, but it isn't zero, and the aggregate footprint of AI compute is growing fast enough that it's becoming a meaningful slice of global electricity demand. We'll come back to this in Module 5 and Module 12.
+
+For now, just hold the picture: you typed a sentence, and a building full of machines whirred briefly to produce the reply.
